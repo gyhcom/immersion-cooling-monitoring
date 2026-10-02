@@ -113,8 +113,44 @@
   .gpu-cell { animation: gpu-pulse 1.4s ease-in-out infinite; }
   .flow-dot { animation: dot-travel 1.3s linear infinite; }
   .telemetry-value { transition: color 200ms ease; }
-  .tank-node { transition: opacity 160ms ease; }
-  .tank-node:hover { opacity: 0.78; }
+  .tank-node { transition: filter 160ms ease; }
+  .tank-selection-frame {
+    fill: rgba(56, 215, 231, 0.08);
+    stroke: rgba(185, 247, 255, 0.95);
+    stroke-width: 1.5;
+    opacity: 0;
+    transition: opacity 160ms ease;
+  }
+  .tank-selection-label {
+    opacity: 0;
+    transform: translateY(3px);
+    transition: opacity 160ms ease, transform 160ms ease;
+    pointer-events: none;
+  }
+  .tank-selection-label rect {
+    fill: #b9f7ff;
+    stroke: #071015;
+    stroke-width: 1;
+  }
+  .tank-selection-label text {
+    fill: #071015;
+    font-size: 9px;
+    font-weight: 700;
+  }
+  .tank-link:hover .tank-node,
+  .tank-link:focus-visible .tank-node {
+    filter: drop-shadow(0 0 7px rgba(56, 215, 231, 0.75));
+  }
+  .tank-link:hover .tank-selection-frame,
+  .tank-link:focus-visible .tank-selection-frame,
+  .tank-link:hover .tank-selection-label,
+  .tank-link:focus-visible .tank-selection-label {
+    opacity: 1;
+  }
+  .tank-link:hover .tank-selection-label,
+  .tank-link:focus-visible .tank-selection-label {
+    transform: translateY(0);
+  }
 }
 
 @keyframes flow-dash { to { stroke-dashoffset: -36; } }

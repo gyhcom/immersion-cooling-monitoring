@@ -55,8 +55,13 @@ export function OverviewSystemFlow({ tanks, scenario }: { tanks: Tank[]; scenari
                 const fillHeight = 72 * (tank.fluidLevel / 100)
                 const statusColor = tank.status === "critical" ? "#ff6b73" : tank.status === "warning" ? "#f4b947" : "#38d7e7"
                 return (
-                  <Link href={`/equipment/${tank.id}`} key={tank.id} aria-label={`${tank.name} 상세 보기`}>
+                  <Link href={`/equipment/${tank.id}`} key={tank.id} aria-label={`${tank.name} 상세 보기`} className="tank-link outline-none">
                     <g transform={`translate(${x} 0)`} className="tank-node cursor-pointer">
+                      <rect className="tank-selection-frame" x="-6" y="-8" width="48" height="116" rx="12" />
+                      <g className="tank-selection-label" aria-hidden="true">
+                        <rect x="-1" y="-27" width="38" height="17" rx="8.5" />
+                        <text x="18" y="-15" textAnchor="middle">선택</text>
+                      </g>
                       <rect width="36" height="92" rx="8" fill="#071015" stroke={statusColor} strokeWidth="2" />
                       <rect x="4" y={88 - fillHeight} width="28" height={fillHeight} rx="4" fill={statusColor} opacity="0.26" />
                       <path className="tank-wave" d={`M4 ${88 - fillHeight} Q11 ${85 - fillHeight} 18 ${88 - fillHeight} T32 ${88 - fillHeight}`} fill="none" stroke={statusColor} strokeWidth="2" />
