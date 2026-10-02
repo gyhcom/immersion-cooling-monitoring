@@ -12,13 +12,17 @@ export function ActiveAlarmSummary({ alarms }: { alarms: Alarm[] }) {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <button type="button" className="flex min-h-[118px] w-full items-center justify-between rounded-xl border border-border/90 bg-card/85 p-4 text-left shadow-none transition hover:border-amber-300/40 hover:bg-accent/25 focus-visible:ring-2 focus-visible:ring-ring">
-          <div className="min-w-0">
-            <p className="text-sm text-muted-foreground">Active Alarms</p>
-            <p className="metric-number mt-1 text-2xl font-semibold">{alarms.length}</p>
-            <p className="mt-1 max-w-[210px] truncate text-xs text-muted-foreground">{primary ? `${primary.equipmentName} · ${primary.message}` : "현재 발생 알람 없음"}</p>
+        <button type="button" className="w-full rounded-xl border border-border/90 bg-card/85 p-3.5 text-left shadow-none transition hover:border-amber-300/40 hover:bg-accent/25 focus-visible:ring-2 focus-visible:ring-ring">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2">
+              <span className={`grid size-7 shrink-0 place-items-center rounded-md border ${alarms.length ? "border-amber-300/25 bg-amber-300/5 text-amber-300" : "border-emerald-300/25 bg-emerald-300/5 text-emerald-300"}`}><BellRing className="size-3.5" /></span>
+              <p className="truncate text-sm text-muted-foreground">Active Alarms</p>
+            </div>
+            <span className={`shrink-0 rounded border px-1.5 py-0.5 text-[10px] font-medium ${alarms.length ? "border-amber-300/25 bg-amber-300/5 text-amber-300" : "border-emerald-300/25 bg-emerald-300/5 text-emerald-300"}`}>{alarms.length ? "확인 필요" : "정상"}</span>
           </div>
-          <div className={`grid size-10 shrink-0 place-items-center rounded-md border ${alarms.length ? "border-amber-300/25 bg-amber-300/5 text-amber-300" : "border-emerald-300/25 bg-emerald-300/5 text-emerald-300"}`}><BellRing className="size-5" /></div>
+          <div className="mt-2 flex min-w-0 items-baseline gap-2"><p className="metric-number text-xl font-semibold">{alarms.length}건</p><span className="truncate text-xs text-muted-foreground">{primary?.equipmentName ?? "No active event"}</span></div>
+          <p className="mt-1 truncate text-xs text-muted-foreground">{primary ? primary.message : "현재 발생 알람 없음"}</p>
+          <div className="mt-3 flex items-center justify-between border-t border-border/70 pt-2 text-xs text-muted-foreground"><span>현재 알람 요약 보기</span><ChevronRight className="size-3.5" /></div>
         </button>
       </SheetTrigger>
       <SheetContent className="sm:max-w-md">

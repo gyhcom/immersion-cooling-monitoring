@@ -1,11 +1,11 @@
 "use client"
 
 import Link from "next/link"
-import { Activity, Cpu, Waves } from "lucide-react"
+import { Activity, Radio, Thermometer } from "lucide-react"
 import { ActiveAlarmSummary } from "@/components/active-alarm-summary"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { MetricCard } from "@/components/metric-card"
+import { OverviewKpiCard } from "@/components/overview-kpi-card"
 import { OverviewSystemFlow } from "@/components/overview-system-flow"
 import { StatusPill } from "@/components/status-pill"
 import { TankLiveCard } from "@/components/tank-live-card"
@@ -16,6 +16,8 @@ export function OverviewDashboard() {
   const activeAlarms = alarms.filter((alarm) => alarm.lifecycle !== "resolved")
   const normalCount = tanks.filter((tank) => tank.status === "normal").length
   const critical = tanks.some((tank) => tank.status === "critical")
+  const hottestTank = tanks.reduce((current, tank) => tank.outletTemp > current.outletTemp ? tank : current)
+  const siteTone = critical ? "red" : activeAlarms.length ? "amber" : "emerald"
 
   return (
     <div className="mx-auto max-w-[1680px] space-y-5">
@@ -29,9 +31,9 @@ export function OverviewDashboard() {
       </div>
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="주요 운영 지표">
-        <MetricCard label="Site Health" value={critical ? "Critical" : activeAlarms.length ? "Attention" : "Normal"} detail={`${normalCount}/4 Tanks 정상 운전`} icon={Activity} accent={critical ? "text-red-300" : "text-cyan-300"} />
-        <MetricCard label="Active Tanks" value="4 / 4" detail="총 16 Servers" icon={Waves} />
-        <MetricCard label="GPU Fleet" value="64" detail="가상 GPU 장비 규모" icon={Cpu} accent="text-violet-300" />
+        <OverviewKpiCard label="Site Health" value={critical ? "Critical" : activeAlarms.length ? "Attention" : "Normal"} detail={activeAlarms[0] ? `${activeAlarms[0].equipmentName} · ${activeAlarms[0].message}` : "전체 냉각 계통 정상 운전"} icon={Activity} tone={siteTone} live footer={<div className="flex gap-1.5" aria-label={`정상 ${normalCount}대, 주의 또는 위험 ${tanks.length - normalCount}대`}>{tanks.map((tank) => <span key={tank.id} className={`h-1.5 flex-1 rounded-full ${tank.status === "critical" ? "bg-red-400" : tank.status === "warning" ? "bg-amber-400" : "bg-emerald-400"}`} />)}</div>} />
+        <OverviewKpiCard label="Tank Connectivity" value={`${tanks.length} / ${tanks.length}`} detail="4대 모두 운전 데이터 수신 중" icon={Radio} tone="cyan" badge="Online" live footer={<div className="flex items-center justify-between border-t border-border/70 pt-2 text-[11px] text-muted-foreground"><span>수신 상태</span><span className="font-mono text-cyan-300">1 sec interval</span></div>} />
+        <OverviewKpiCard label="Max Outlet Temp" value={`${hottestTank.outletTemp} °C`} detail={`${hottestTank.name} · 최고 출구 온도`} icon={Thermometer} tone={hottestTank.status === "critical" ? "red" : hottestTank.status === "warning" ? "amber" : "cyan"} badge={hottestTank.status === "normal" ? "Normal" : hottestTank.status === "warning" ? "Warning" : "Critical"} footer={<div className="relative h-1.5 overflow-hidden rounded-full bg-secondary"><div className={`h-full rounded-full transition-[width] duration-500 ${hottestTank.status === "critical" ? "bg-red-400" : hottestTank.status === "warning" ? "bg-amber-400" : "bg-cyan-300"}`} style={{ width: `${Math.min(100, Math.max(12, ((hottestTank.outletTemp - 25) / 25) * 100))}%` }} /></div>} />
         <ActiveAlarmSummary alarms={activeAlarms} />
       </section>
 

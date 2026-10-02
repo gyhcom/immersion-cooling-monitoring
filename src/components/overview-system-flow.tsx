@@ -49,7 +49,7 @@ export function OverviewSystemFlow({ tanks, scenario }: { tanks: Tank[]; scenari
               <text x="26" y="81" textAnchor="middle" fill="#8da5ad" fontSize="9">88%</text>
             </g>
 
-            <g transform="translate(520 34)">
+            <g transform="translate(520 80)">
               {tanks.map((tank, index) => {
                 const x = index * 47
                 const fillHeight = 72 * (tank.fluidLevel / 100)
@@ -65,7 +65,6 @@ export function OverviewSystemFlow({ tanks, scenario }: { tanks: Tank[]; scenari
                   </Link>
                 )
               })}
-              <text x="88" y="135" textAnchor="middle" fill="#8da5ad" fontSize="10">4 IMMERSION TANKS</text>
             </g>
 
             <g transform="translate(784 72)">
@@ -83,15 +82,30 @@ export function OverviewSystemFlow({ tanks, scenario }: { tanks: Tank[]; scenari
               <text x="24" y="13" fill="#8da5ad" fontSize="10">RETURN · 32.8 °C</text>
             </g>
 
-            <g transform="translate(521 207)">
-              <text fill="#8da5ad" fontSize="10">TOTAL FLOW</text><text x="76" fill="#edf7fa" fontSize="12" fontWeight="600">{totalFlow} L/min</text>
-              <text y="19" fill="#8da5ad" fontSize="10">HOT SPOT</text><text x="76" y="19" fill={hottestTank.status === "critical" ? "#ff6b73" : "#f4b947"} fontSize="12" fontWeight="600">{hottestTank.name} · {hottestTank.outletTemp} °C</text>
-            </g>
           </svg>
         </div>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
           <span className="inline-flex items-center gap-2"><Waves className="size-3.5 text-cyan-300" /> 점선의 이동 방향이 현재 냉각수 흐름을 나타냅니다.</span>
           <span className="inline-flex items-center gap-2"><Gauge className="size-3.5 text-amber-300" /> Tank를 선택하면 상세 Trend로 이동합니다.</span>
+        </div>
+        <div className="mt-3 overflow-hidden rounded-lg border border-border bg-background/35">
+          <div className="flex flex-col items-start justify-between gap-2 border-b border-border/80 px-3 py-2 text-xs sm:flex-row sm:items-center">
+            <span className="font-medium text-foreground">Tank Live Summary</span>
+            <div className="flex w-full items-center justify-between gap-3 text-muted-foreground sm:w-auto"><span>총 유량 <strong className="metric-number text-foreground">{totalFlow} L/min</strong></span><span>최고 온도 <strong className={hottestTank.status === "critical" ? "text-red-300" : hottestTank.status === "warning" ? "text-amber-300" : "text-foreground"}>{hottestTank.outletTemp} °C</strong></span></div>
+          </div>
+          <div className="divide-y divide-border/70">
+            {tanks.map((tank) => (
+              <Link key={tank.id} href={`/equipment/${tank.id}`} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 px-3 py-2 text-xs transition hover:bg-accent/25 sm:grid-cols-[minmax(0,1fr)_auto_72px_72px_64px]">
+                <div className="min-w-0"><span className="font-medium text-foreground">{tank.name}</span><span className="ml-2 text-muted-foreground">{tank.zone}</span></div>
+                <StatusPill value={tank.status} className="h-5 px-1.5 text-[10px]" />
+                <div className="col-span-2 grid grid-cols-3 gap-3 text-muted-foreground sm:col-span-1 sm:contents">
+                  <span>Outlet <strong className="metric-number ml-1 text-foreground">{tank.outletTemp}°</strong></span>
+                  <span>Flow <strong className="metric-number ml-1 text-foreground">{tank.flowRate}</strong></span>
+                  <span>Pump <strong className="metric-number ml-1 text-foreground">{tank.pumpSpeed}%</strong></span>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </CardContent>
     </Card>
