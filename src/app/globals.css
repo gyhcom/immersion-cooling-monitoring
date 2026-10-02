@@ -151,6 +151,28 @@
   .tank-link:focus-visible .tank-selection-label {
     transform: translateY(0);
   }
+  .tank-flow-supply {
+    stroke-dasharray: 8 7;
+    animation: tank-supply-flow 1s linear infinite;
+  }
+  .tank-flow-return {
+    stroke-dasharray: 8 7;
+    animation: tank-return-flow 1s linear infinite;
+  }
+  .heat-wave {
+    stroke-dasharray: 8 5;
+    animation: heat-rise 1.5s ease-in-out infinite;
+  }
+  .chart-live-scan {
+    position: absolute;
+    inset-block: 22px 22px;
+    left: -16%;
+    z-index: 2;
+    width: 16%;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(56, 215, 231, 0.08), transparent);
+    animation: chart-scan 5s linear infinite;
+  }
 }
 
 @keyframes flow-dash { to { stroke-dashoffset: -36; } }
@@ -158,6 +180,10 @@
 @keyframes rotor-spin { to { transform: rotate(360deg); } }
 @keyframes wave-bob { from { transform: translateY(-1px); } to { transform: translateY(2px); } }
 @keyframes gpu-pulse { 0%, 100% { opacity: 0.42; } 50% { opacity: 1; } }
+@keyframes tank-supply-flow { to { stroke-dashoffset: -30; } }
+@keyframes tank-return-flow { to { stroke-dashoffset: -30; } }
+@keyframes heat-rise { 0%, 100% { opacity: 0.35; transform: translateY(3px); } 50% { opacity: 1; transform: translateY(-2px); } }
+@keyframes chart-scan { to { left: 100%; } }
 @keyframes dot-travel {
   from { left: 0; opacity: 0; }
   10%, 90% { opacity: 1; }
@@ -171,6 +197,10 @@
   .pump-icon,
   .tank-wave,
   .gpu-cell,
+  .tank-flow-supply,
+  .tank-flow-return,
+  .heat-wave,
+  .chart-live-scan,
   .flow-dot {
     animation: none !important;
   }
